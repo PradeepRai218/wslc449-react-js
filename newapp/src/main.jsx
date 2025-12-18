@@ -5,7 +5,7 @@ import Home from './components/pages/Home'
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+ 
     <Home/>
-  </StrictMode>,
+  
 )
