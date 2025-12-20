@@ -7,10 +7,11 @@ import Services from './components/pages/Services'
 import Contact from './components/pages/Contact'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Errror404 from './components/pages/Errror404'
+import Faq from './components/pages/Faq'
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+
       <BrowserRouter>
           <Routes>
               {/* http://localhost:5173/ */}
@@ -21,9 +22,10 @@ createRoot(document.getElementById('root')).render(
                <Route path={'/services'} element={<Services/>}/>
                 {/* http://localhost:5173/contact */}
                <Route path={'/contact'} element={<Contact/>}/>
+                <Route path={'/faq'} element={<Faq/>}/>
 
                <Route path={'*'} element={<Errror404/>}/>
           </Routes>
       </BrowserRouter>
-  </StrictMode>
+
 )
