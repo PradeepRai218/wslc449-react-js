@@ -19,7 +19,7 @@ export default function Faq() {
                 className="w-full border-b-2 border-gray-300 pb-3 mb-3 text-left group focus:outline-none"
               >
                 <div onClick={()=>setCurrentId( obj.id==currentId ? 0 :  obj.id   )} className="text-lg relative cursor-pointer font-semibold">
-                  Q{index + 1}: {obj.question}
+                  Q: {obj.question}
                   <div  className="absolute right-0 top-0">
                     {
                        currentId ==obj.id ?  <FaMinus /> :   <FaPlus />
