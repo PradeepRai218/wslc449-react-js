@@ -5,7 +5,7 @@ import Footer from '../common/Footer'
 export default function Contact() {
   return (
     <>
-        <Header />
+       
         <div className="min-h-screen bg-gray-50 py-12 px-4">
             <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="contact-left">
@@ -55,7 +55,7 @@ export default function Contact() {
                 </div>
             </div>
         </div>
-          <Footer/>
+        
     </>
   )
 }

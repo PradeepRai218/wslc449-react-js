@@ -157,6 +157,23 @@ export default function Header() {
                     Contact
                   </Link>
                 </li>
+                 <li>
+                  <Link
+                    to={"/product"}
+                    className="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  >
+                    Product
+                  </Link>
+                </li>
+                 <li>
+                  <Link
+                    to={"/login"}
+                    className="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  >
+                    Login
+                  </Link>
+                </li>
+
 
                 <li>
                   <button onClick={()=>setModal(true)} className="bg-amber-500 p-[5px_20px] cursor-pointer">

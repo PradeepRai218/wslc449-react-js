@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <>
-        <Header/>
+       
         <main className="min-h-screen bg-gray-50">
             
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-12 mb-12">
@@ -84,7 +84,7 @@ export default function Home() {
                 </div>
             </div>
         </main>
-          <Footer/>
+        
     </>
   )
 }

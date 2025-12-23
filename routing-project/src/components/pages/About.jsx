@@ -5,7 +5,7 @@ import Footer from "../common/Footer";
 export default function About() {
   return (
     <div>
-      <Header />
+     
       <div className="bg-gray-50">
         {/* About Section */}
         <section className="py-16 px-4 max-w-6xl mx-auto">
@@ -63,7 +63,7 @@ export default function About() {
           </div>
         </section>
       </div>
-      <Footer/>
+     
     </div>
   );
 }

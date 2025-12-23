@@ -8,7 +8,7 @@ export default function Faq() {
   let [currentId, setCurrentId] = useState(FaqData[0].id); //1
   return (
     <div>
-      <Header />
+      
       <div className="max-w-[700px] mx-auto py-15">
         <>
         {currentId}
@@ -41,7 +41,7 @@ export default function Faq() {
         </>
       </div>
 
-      <Footer />
+     
     </div>
   );
 }

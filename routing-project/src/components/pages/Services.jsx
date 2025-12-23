@@ -5,7 +5,7 @@ import Footer from "../common/Footer";
 export default function Services() {
   return (
     <>
-      <Header />
+    
 
       <div>
         <div className="bg-gray-50 py-12 px-4">
@@ -54,7 +54,7 @@ export default function Services() {
           </div>
         </div>
       </div>
-        <Footer/>
+       
     </>
   );
 }

@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 export default function Errror404() {
   return (
     <div>
-        <Header/>
+       
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
             <div className="text-center">
                 <h1 className="text-9xl font-bold text-gray-800">404</h1>
