@@ -11,6 +11,7 @@ import Faq from "./components/pages/Faq";
 import Layout from "./components/common/Layout";
 import Login from "./components/pages/Login";
 import ProductsPage from "./components/pages/Product";
+import ProductDetails from "./components/pages/ProductDetails";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")).render(
         <Route path={"/contact"} element={<Contact />} />
         <Route path={"/faq"} element={<Faq />} />
         <Route path={"/product"} element={<ProductsPage />} />
+        <Route path={"/product-details/:pid"} element={<ProductDetails />} />
 
         <Route path={"*"} element={<Errror404 />} />
 

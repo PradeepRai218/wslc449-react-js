@@ -1,12 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Loading from "../common/Loading";
+import { Link } from "react-router";
 
 export default function ProductsPage() {
   //   let [count, setCount] = useState(1);
   //   let [count1, setCount1] = useState(1);
   let [categoryData, setCategoryData] = useState([]);
   let [brandData, setBrandData] = useState([]);
-  let [productData, setProductData] = useState([]);  
+  let [productData, setProductData] = useState([]);
+  let [loading, setLoading] = useState(false);
+
+  //Filter State
+  let [sorting, setSorting] = useState(null);
+  let [categoryFilter, setCategoryFilter] = useState([]);
+  let [brandFilter, setBrandFilter] = useState([]);
+   let [priceFilter, setPriceFilter] = useState([ null,null ]);
+
+
+
+
   let getCategories = async () => {
     let apiRes = await fetch(
       `https://wscubetech.co/ecommerce-api/categories.php`
@@ -20,30 +33,37 @@ export default function ProductsPage() {
     let finalData = await apiRes.json();
     let { data } = finalData;
     setBrandData(data);
-    
   };
 
-  let getProducts =async () => {
-     let apiRes=await axios.get(`https://wscubetech.co/ecommerce-api/products.php`)
-     //axios res->Data key fixed
-     let {data}=apiRes.data
-     setProductData(data);
-     
+  let getProducts = async () => {
+    setLoading(true);
+
+    let apiRes = await axios.get(
+      `https://wscubetech.co/ecommerce-api/products.php`,
+      {
+        params: {
+          page: 1,
+          limit: 20,
+          categories: categoryFilter.toString(),
+          brands: brandFilter.toString(),
+          price_from:priceFilter[0],
+          price_to:priceFilter[1],
+          discount_from: "",
+          discount_to: "",
+          rating: "",
+          sorting,
+        },
+      }
+    );
+    //axios res->Data key fixed
+    let { data } = apiRes.data;
+    setProductData(data);
+    setLoading(false);
   };
 
   //   getCategories();
   //   getBrands();
   //   getProducts();
-
-  let product = [
-    {
-      title: "Essence Mascara Lash Princess",
-      img: "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png",
-      desc: "Volumizing and lengthening mascara with long-lasting effect.",
-      price: "Rs.10",
-      discount: "(7)",
-    },
-  ];
 
   useEffect(() => {
     getCategories();
@@ -52,7 +72,34 @@ export default function ProductsPage() {
 
   useEffect(() => {
     getProducts();
-  }, []); //Filter State ke Change
+  }, [sorting, categoryFilter,brandFilter,priceFilter]); //Filter State ke Change
+
+  let getCategoryCheckData = (e) => {
+    let checkvalue = e.target.value; //furniture
+    if (e.target.checked) {
+      //                   'beauty', 'furniture','mens-watches'
+      setCategoryFilter([...categoryFilter, checkvalue]);
+    } else {
+      //furniture
+      let filterData = categoryFilter.filter((v) => v != checkvalue); //Array
+      setCategoryFilter(filterData);
+    }
+  };
+
+ let getBrandCheckData = (e) => {
+    let checkvalue = e.target.value; //furniture
+    if (e.target.checked) {
+      //                   'beauty', 'furniture','mens-watches'
+      setBrandFilter([...brandFilter, checkvalue]);
+    } else {
+      //furniture
+      let filterData = brandFilter.filter((v) => v != checkvalue); //Array
+      setBrandFilter(filterData);
+    }
+  };
+
+
+
 
   return (
     <div className="w-full px-4 pb-6 py-10">
@@ -66,7 +113,13 @@ export default function ProductsPage() {
                 categoryData.map((obj, index) => {
                   return (
                     <li key={index} className="flex items-center gap-2">
-                      <input className="accent-black" type="checkbox" />
+                      <input
+                        onChange={getCategoryCheckData}
+                        value={obj.slug}
+                        className="accent-black"
+                        type="checkbox"
+                      />
+
                       <span>{obj.name}</span>
                     </li>
                   );
@@ -80,7 +133,7 @@ export default function ProductsPage() {
                 brandData.map((obj, index) => {
                   return (
                     <li key={index} className="flex items-center gap-2">
-                      <input className="accent-black" type="checkbox" />
+                      <input onChange={getBrandCheckData} value={obj.slug} className="accent-black" type="checkbox" />
                       <span>{obj.name}</span>
                     </li>
                   );
@@ -91,19 +144,19 @@ export default function ProductsPage() {
             <h2 className="text-sm font-semibold uppercase mb-3">Price</h2>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <input className="accent-black" type="radio" name="price" />
+                <input  onClick={()=>setPriceFilter([10,250])} className="accent-black" type="radio" name="price" />
                 <span>Rs. 10 to Rs. 250</span>
               </li>
               <li className="flex items-center gap-2">
-                <input className="accent-black" type="radio" name="price" />
+                <input onClick={()=>setPriceFilter([250,500])}  className="accent-black" type="radio" name="price" />
                 <span>Rs. 250 to Rs. 500</span>
               </li>
               <li className="flex items-center gap-2">
-                <input className="accent-black" type="radio" name="price" />
+                <input onClick={()=>setPriceFilter([500,1000])}  className="accent-black" type="radio" name="price" />
                 <span>Rs. 500 to Rs. 1000</span>
               </li>
               <li className="flex items-center gap-2">
-                <input className="accent-black" type="radio" name="price" />
+                <input onClick={()=>setPriceFilter([1000,50000])}  className="accent-black" type="radio" name="price" />
                 <span>Rs. 1000 &amp; Above</span>
               </li>
             </ul>
@@ -156,35 +209,56 @@ export default function ProductsPage() {
 
         {/* RIGHT PRODUCTS */}
         <div className="flex-1 bg-gray-50 p-4 rounded-lg">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {productData.map((product, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition"
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-[180px] w-full object-contain"
-                />
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs text-gray-600 mb-3 line-clamp-3">
-                    {product.description}
-                  </p>
-                  <div className="flex gap-2 text-sm">
-                    <span className="font-semibold">{product.price}</span>
-                    <span className="line-through text-gray-400">
-                      {product.price}
-                    </span>
-                   
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="flex justify-end m-4">
+            <select
+              onChange={(e) => {
+                setSorting(e.target.value);
+              }}
+              className="p-3 border-1"
+            >
+              <option>Sort by : Recommended</option>
+              <option value="1">Name : A to Z</option>
+              <option value="2">Name : Z to A</option>
+              <option value="3">Price : Low to High</option>
+              <option value="4">Price : High to Low</option>
+            </select>
           </div>
+
+          {loading ? (
+            <Loading />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {productData.map((product, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition"
+                >
+                  <Link to={`/product-details/${product.id}`}>
+              
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-[180px] w-full object-contain"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-sm font-semibold mb-2">
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-gray-600 mb-3 line-clamp-3">
+                      {product.description}
+                    </p>
+                    <div className="flex gap-2 text-sm">
+                      <span className="font-semibold">{product.price}</span>
+                      <span className="line-through text-gray-400">
+                        {product.price}
+                      </span>
+                    </div>
+                  </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
