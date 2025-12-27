@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Loading from "../common/Loading";
 import { Link } from "react-router";
-
+import { cartContext } from "../../context/MyGlobalData";
+  import { ToastContainer, toast } from 'react-toastify';
 export default function ProductsPage() {
   //   let [count, setCount] = useState(1);
   //   let [count1, setCount1] = useState(1);
@@ -15,10 +16,7 @@ export default function ProductsPage() {
   let [sorting, setSorting] = useState(null);
   let [categoryFilter, setCategoryFilter] = useState([]);
   let [brandFilter, setBrandFilter] = useState([]);
-   let [priceFilter, setPriceFilter] = useState([ null,null ]);
-
-
-
+  let [priceFilter, setPriceFilter] = useState([null, null]);
 
   let getCategories = async () => {
     let apiRes = await fetch(
@@ -46,8 +44,8 @@ export default function ProductsPage() {
           limit: 20,
           categories: categoryFilter.toString(),
           brands: brandFilter.toString(),
-          price_from:priceFilter[0],
-          price_to:priceFilter[1],
+          price_from: priceFilter[0],
+          price_to: priceFilter[1],
           discount_from: "",
           discount_to: "",
           rating: "",
@@ -72,7 +70,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     getProducts();
-  }, [sorting, categoryFilter,brandFilter,priceFilter]); //Filter State ke Change
+  }, [sorting, categoryFilter, brandFilter, priceFilter]); //Filter State ke Change
 
   let getCategoryCheckData = (e) => {
     let checkvalue = e.target.value; //furniture
@@ -86,7 +84,7 @@ export default function ProductsPage() {
     }
   };
 
- let getBrandCheckData = (e) => {
+  let getBrandCheckData = (e) => {
     let checkvalue = e.target.value; //furniture
     if (e.target.checked) {
       //                   'beauty', 'furniture','mens-watches'
@@ -98,11 +96,9 @@ export default function ProductsPage() {
     }
   };
 
-
-
-
   return (
     <div className="w-full px-4 pb-6 py-10">
+      <ToastContainer/>
       <div className="grid grid-cols-[18%_auto] gap-10">
         {/* LEFT SIDEBAR */}
         <div className="hidden lg:block border-1 border-[#ccc] p-3 ">
@@ -133,7 +129,12 @@ export default function ProductsPage() {
                 brandData.map((obj, index) => {
                   return (
                     <li key={index} className="flex items-center gap-2">
-                      <input onChange={getBrandCheckData} value={obj.slug} className="accent-black" type="checkbox" />
+                      <input
+                        onChange={getBrandCheckData}
+                        value={obj.slug}
+                        className="accent-black"
+                        type="checkbox"
+                      />
                       <span>{obj.name}</span>
                     </li>
                   );
@@ -144,19 +145,39 @@ export default function ProductsPage() {
             <h2 className="text-sm font-semibold uppercase mb-3">Price</h2>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <input  onClick={()=>setPriceFilter([10,250])} className="accent-black" type="radio" name="price" />
+                <input
+                  onClick={() => setPriceFilter([10, 250])}
+                  className="accent-black"
+                  type="radio"
+                  name="price"
+                />
                 <span>Rs. 10 to Rs. 250</span>
               </li>
               <li className="flex items-center gap-2">
-                <input onClick={()=>setPriceFilter([250,500])}  className="accent-black" type="radio" name="price" />
+                <input
+                  onClick={() => setPriceFilter([250, 500])}
+                  className="accent-black"
+                  type="radio"
+                  name="price"
+                />
                 <span>Rs. 250 to Rs. 500</span>
               </li>
               <li className="flex items-center gap-2">
-                <input onClick={()=>setPriceFilter([500,1000])}  className="accent-black" type="radio" name="price" />
+                <input
+                  onClick={() => setPriceFilter([500, 1000])}
+                  className="accent-black"
+                  type="radio"
+                  name="price"
+                />
                 <span>Rs. 500 to Rs. 1000</span>
               </li>
               <li className="flex items-center gap-2">
-                <input onClick={()=>setPriceFilter([1000,50000])}  className="accent-black" type="radio" name="price" />
+                <input
+                  onClick={() => setPriceFilter([1000, 50000])}
+                  className="accent-black"
+                  type="radio"
+                  name="price"
+                />
                 <span>Rs. 1000 &amp; Above</span>
               </li>
             </ul>
@@ -229,36 +250,71 @@ export default function ProductsPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {productData.map((product, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition"
-                >
-                  <Link to={`/product-details/${product.id}`}>
-              
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-[180px] w-full object-contain"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-sm font-semibold mb-2">
-                      {product.name}
-                    </h3>
-                    <p className="text-xs text-gray-600 mb-3 line-clamp-3">
-                      {product.description}
-                    </p>
-                    <div className="flex gap-2 text-sm">
-                      <span className="font-semibold">{product.price}</span>
-                      <span className="line-through text-gray-400">
-                        {product.price}
-                      </span>
-                    </div>
-                  </div>
-                  </Link>
-                </div>
+                <ProductCard product={product} key={i} />
               ))}
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product }) {
+  let {name,image,id,price}=product
+  let { cart, setCart } = useContext(cartContext);
+ 
+  let addtCart=()=>{
+     let obj={
+        id,
+        name,
+        image,
+        price,
+        qty:1
+     }
+     toast.success(name+"Item Added in Cart")
+     setCart([...cart,obj])
+     console.log(obj);
+     
+  }
+
+  let deleteCart=()=>{
+     if(confirm("Are you sure want to delete?")){
+        let filterData=cart.filter((obj)=>obj.id!=id) //Array
+        setCart(filterData)
+     }
+    
+  }
+
+  let checkProductinCart=cart.find((obj)=>obj.id==id)
+
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition">
+      <Link to={`/product-details/${product.id}`}>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="h-[180px] w-full object-contain"
+        />
+      </Link>
+      <div className="p-4">
+        <Link to={`/product-details/${product.id}`}>
+          <h3 className="text-sm font-semibold mb-2">{product.name}</h3>
+        </Link>
+        <p className="text-xs text-gray-600 mb-3 line-clamp-3">
+          {product.description}
+        </p>
+        <div className="flex gap-2 justify-between text-sm items-center">
+          <span className="font-semibold">{product.price}</span>
+          <span className="line-through text-gray-400">{product.price}</span>
+          {
+            checkProductinCart ?
+            <button onClick={deleteCart} className="p-2 bg-red-700 text-white cursor-pointer">Delete Cart</button>
+            :
+            <button onClick={addtCart} className="p-2 bg-blue-700 text-white cursor-pointer">Add to Cart</button>
+          }
+          
         </div>
       </div>
     </div>

@@ -12,8 +12,13 @@ import Layout from "./components/common/Layout";
 import Login from "./components/pages/Login";
 import ProductsPage from "./components/pages/Product";
 import ProductDetails from "./components/pages/ProductDetails";
+import MyGlobalData from "./context/MyGlobalData";
+import Cart from "./components/pages/Cart";
 
 createRoot(document.getElementById("root")).render(
+
+<MyGlobalData>
+
   <BrowserRouter>
     <Routes>
       {/* http://localhost:5173/ */}
@@ -28,6 +33,7 @@ createRoot(document.getElementById("root")).render(
         <Route path={"/faq"} element={<Faq />} />
         <Route path={"/product"} element={<ProductsPage />} />
         <Route path={"/product-details/:pid"} element={<ProductDetails />} />
+        <Route path={"/cart"} element={<Cart />} />
 
         <Route path={"*"} element={<Errror404 />} />
 
@@ -35,4 +41,8 @@ createRoot(document.getElementById("root")).render(
       <Route path="/login" element={<Login/>}/>
     </Routes>
   </BrowserRouter>
+
+</MyGlobalData>
+
+
 );

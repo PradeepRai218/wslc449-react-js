@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
 import { IoEyeSharp } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa6";
+import { cartContext } from '../../context/MyGlobalData';
 
 export default function Home() {
+
+    let {cart,setCart}  =useContext(cartContext)
     //2
     let [count,setCount]  =useState(1) //2
 
@@ -18,7 +21,9 @@ export default function Home() {
 
     let [passwpordStatus,setPasswordstatus]=useState(false)
 
-   
+   let addtoCart=()=>{
+        setCart([...cart,99])
+   }
 
   return (
     <>
@@ -66,6 +71,7 @@ export default function Home() {
                 <section className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to Home</h1>
                     <p className="text-lg text-gray-600">Discover amazing content and features</p>
+                    <button onClick={addtoCart} className='p-3 bg-yellow-500 cursor-pointer'>Add To Cart</button>
                 </section>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { IoCloseSharp } from "react-icons/io5";
+import { cartContext } from "../../context/MyGlobalData";
 
 export default function Header() {
   let [modal,setModal]=useState(false)
+  let {cart}= useContext(cartContext) //Provider Value Data 
+ 
+  
   return (
     <> 
       <div className={`w-[400px] duration-300 bg-white border-1 border-[#ccc] fixed left-[50%]  ${modal ? 'top-[50%]' : 'top-[-1000px]' } translate-[-50%]  `}>
@@ -69,7 +73,7 @@ export default function Header() {
         </form>
       </div>
 
-      <header className="stick top-0 bg-white">
+      <header className="sticky top-0 bg-white">
         <nav className="bg-neutral-primary w-full z-20 top-0 start-0 border-b border-default">
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a
@@ -114,7 +118,7 @@ export default function Header() {
               className="hidden w-full md:block md:w-auto"
               id="navbar-default"
             >
-              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-neutral-primary">
+              <ul className="font-medium flex items-center flex-col p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-neutral-primary">
                 <li>
                   <Link
                     to={"/"}
@@ -174,6 +178,14 @@ export default function Header() {
                   </Link>
                 </li>
 
+               <li>
+                  <Link
+                    to={'/cart'}
+                    className="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  >
+                    Cart ({cart.length})
+                  </Link>
+                </li>
 
                 <li>
                   <button onClick={()=>setModal(true)} className="bg-amber-500 p-[5px_20px] cursor-pointer">
